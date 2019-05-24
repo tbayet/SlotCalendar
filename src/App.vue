@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Calendar :minHour=8 :maxHour=22 :gap=2 v-model="test" />
-    <button @click="show">LOG V-MODEL</button>
+    {{ JSON.stringify(this.test) }}
   </div>
 </template>
 
@@ -15,12 +15,7 @@ export default {
   },
   data: () => ({
     test: []
-  }),
-  methods: {
-    show() {
-      console.log(this.test)
-    }
-  }
+  })
 }
 </script>
 

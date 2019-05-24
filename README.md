@@ -1,4 +1,4 @@
-# v-calendar
+# Vue.js Slot Calendar
 
 ## Project setup
 ```

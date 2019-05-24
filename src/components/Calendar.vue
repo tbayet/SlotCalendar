@@ -15,7 +15,7 @@
       :key="rowIndex">
         <td>
           <div class="hourTick">{{ hour }}:00-</div>
-          <div v-if="rowIndex === d_hours.length - 1" class="hourTick">{{ hour + gap }}:00-</div>
+          <div v-if="rowIndex === d_hours.length - 1" class="hourTick">{{ toHour(hour + (gap || (d_hours[1] - d_hours[0]))) }}:00-</div>
         </td>
         <td v-for="(dayOfWeek, columnIndex) in daysOfWeek"
         :key="columnIndex"
@@ -28,29 +28,53 @@
           {{ isSelected(columnIndex, rowIndex) ? isSelected(columnIndex, rowIndex).startDate : null }}
         </td>
       </tr>
-      <background-svg :color="colorPicker(d_hours)"/>
+      <background-svg :color="colorPicker(d_hours)" :paths="svgPaths"/>
     </tbody>
   </table>
 </template>
 
 <script>
 import Moment from 'moment'
-import backgroundSvg from './city.svg.vue'
+import backgroundSvg from './City.svg.vue'
 import { toHour, formatHours, colorPicker, durationFromNow } from '../utils'
 
 export default {
   name: 'Calendar',
   props: {
-    value: Array,
+    value: { validator: function (value) {
+      return !value || typeof value === 'object'
+    } },
     // [13, 14, 16, 17, 22]
-    hours: [Number],
+    hours: { validator: function (hours) {
+      return !hours || (typeof hours === 'object' &&
+        hours.reduce((acc, v, i) => acc && typeof v === 'number' && (!i || (hours[i - 1] !== v), true)) &&
+        hours.sort((a, b) => a - b).equals(hours) &&
+        hours[0] >= 0 && hours[hours.length - 1] <= 24
+      )
+    } },
     // Or :
-    minHour: Number,
-    maxHour: Number,
-    gap: Number,
+    minHour: { validator: function (minHour) {
+      return !minHour || (typeof minHour === 'number' && minHour >= 0 && minHour <= 24)
+    } },
+    maxHour: { validator: function (maxHour) {
+      return !maxHour || (typeof maxHour === 'number' && maxHour >= 0 && maxHour <= 24)
+    } },
+    gap: { validator: function (gap) {
+      return !gap || (typeof gap === 'number')
+    } },
+    /**
+     * {
+     *  sun: "",
+     *  city: "",
+     *  sky1: "",
+     *  sky2: "",
+     * }
+     */
+    svgPaths: Object,
+    timeSeed: Number // ms
   },
   components: {
-    'background-svg': backgroundSvg,
+    'background-svg': backgroundSvg
   },
   data: () => ({
     selectedCells: [],
@@ -60,22 +84,23 @@ export default {
   }),
   methods: {
     colorPicker: colorPicker,
-    onClick(column, row) {
+    toHour: toHour,
+    onClick (column, row) {
       if (!this.isDead(column, row)) {
         this.isSelected(column, row)
-          ? this.selectedCells.splice(this.selectedCells.findIndex(e => e.column == column && e.row == row), 1)
-          : this.selectedCells.push(formatHours(this.d_hours, column, row))
+          ? this.selectedCells.splice(this.selectedCells.findIndex(e => e.column === column && e.row === row), 1)
+          : this.selectedCells.push(formatHours(this.d_hours, column, row, this.timeSeed))
         this.$emit('input', this.selectedCells)
       }
     },
     isSelected (column, row) {
-      return (this.selectedCells.find(e => e.column === column && e.row == row))
+      return (this.selectedCells.find(e => e.column === column && e.row === row))
     },
-    isDead(column, row) {
-      return durationFromNow(this.d_hours, column, row) <= 4
+    isDead (column, row) {
+      return durationFromNow(this.d_hours, column, row, this.timeSeed) <= 4
     },
     sortDaysOfWeek () {
-      const todayIndex = Moment().day() - 1
+      const todayIndex = Moment(this.timeSeed).day() - 1
       this.daysOfWeek = this.daysOfWeek.concat(this.daysOfWeek.splice(0, todayIndex))
     },
     formatProps () {
@@ -91,7 +116,7 @@ export default {
         ? this.hours
         : formatHours(this.minHour, this.maxHour, this.gap || 1)
     },
-    responsiveSentence(str) {
+    responsiveSentence (str) {
       return (this.windowWidth <= 800 ? str.slice(0, 2) : str)
     },
     handleResize () {
@@ -100,12 +125,18 @@ export default {
   },
   created () {
     window.addEventListener('resize', this.handleResize)
+    if (!(this.hours || (this.minHour && this.maxHour && this.gap)) ||
+    (this.hours && (this.minHour || this.maxHour || this.gap)) ||
+    this.minHour >= this.maxHour ||
+    this.gap > this.maxHour - this.minHour) {
+      throw new TypeError('invalid props', 'Calendar.vue')
+    }
   },
   mounted () {
     this.sortDaysOfWeek()
     this.formatProps()
   },
-  destroyed() {
+  destroyed () {
     window.removeEventListener('resize', this.handleResize)
   }
 }
