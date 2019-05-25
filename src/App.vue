@@ -1,21 +1,24 @@
 <template>
   <div id="app">
-    <Calendar :minHour=8 :maxHour=22 :gap=2 v-model="test" />
+    <vue-slot-calendar :minHour=8 :maxHour=22 :gap=2 v-model="test" />
     {{ JSON.stringify(this.test) }}
   </div>
 </template>
 
 <script>
-import Calendar from './components/Calendar.vue'
+import VueSlotCalendar from '../dist/vue-slot-calendar.esm'
 
 export default {
   name: 'app',
   components: {
-    Calendar
+    VueSlotCalendar
   },
   data: () => ({
     test: []
-  })
+  }),
+  mounted () {
+    // console.log(VueSlotCalendar)
+  }
 }
 </script>
 

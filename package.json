@@ -1,20 +1,34 @@
 {
-  "name": "slot-calendar",
-  "version": "0.1.0",
-  "private": true,
+  "name": "vue-slot-calendar",
+  "version": "0.1.1",
+  "author": "Thomas Bayet",
+  "license": "MIT",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target wc --dest dist --name vue-slot-calendar 'src/components/Calendar.vue'",
-    "build-demo": "vue-cli-service build --dest demo",
-    "lint": "vue-cli-service lint"
+    "serve": "vue-cli-service serve 'src/main.js'",
+    "build": "vue-cli-service build --dest dist --target lib --name vue-slot-calendar 'src/components/VueSlotCalendar.vue'",
+    "build-demo": "vue-cli-service build --dest demo 'src/main.js'",
+    "lint": "vue-cli-service lint",
+    "docs": "npm run docs:serve",
+    "docs:build": "vue-cli-service docs --mode build",
+    "docs:serve": "vue-cli-service docs --mode serve",
+    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build"
   },
+  "main": "dist/vue-slot-calendar.common.js",
+  "module": "dist/vue-slot-calendar.esm.js",
+  "unpkg": "dist/vue-slot-calendar.umd.min.js",
+  "files": [
+    "dist/vue-slot-calendar.common.js",
+    "dist/vue-slot-calendar.umd.min.js",
+    "dist/vue-slot-calendar.umd.js",
+    "dist/vue-slot-calendar.esm.js",
+    "src"
+  ],
   "dependencies": {
     "core-js": "^2.6.5",
-    "moment": "^2.24.0",
-    "vue": "^2.6.10",
-    "vue-fragment": "^1.5.1"
+    "moment": "^2.24.0"
   },
   "devDependencies": {
+    "node-sass": "^4.12.0",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
@@ -24,7 +38,8 @@
     "eslint-plugin-vue": "^5.0.0",
     "sass": "^1.20.1",
     "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-cli-plugin-p11n": "^0.3.0",
+    "vue": "^2.6.10"
   },
   "eslintConfig": {
     "root": true,
@@ -49,5 +64,7 @@
   "browserslist": [
     "> 1%",
     "last 2 versions"
-  ]
+  ],
+  "jsdelivr": "dist/vue-slot-calendar.umd.min.js",
+  "sideeffects": false
 }

@@ -39,7 +39,7 @@ import backgroundSvg from './City.svg.vue'
 import { toHour, formatHours, colorPicker, durationFromNow } from '../utils'
 
 export default {
-  name: 'Calendar',
+  name: 'VueSlotCalendar',
   props: {
     value: { validator: function (value) {
       return !value || typeof value === 'object'
