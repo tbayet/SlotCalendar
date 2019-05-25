@@ -8,7 +8,7 @@ export const durationFromNow = (hours, column, row, timeSeed) => {
   return (Moment.duration((until - now) * 1000).asHours())
 }
 
-export const formatHours = (hours, column, row, timeSeed) => {
+export const slotify = (hours, column, row, timeSeed) => {
   const day = Moment(timeSeed).startOf('date').add(column, 'days')
   const dateFormat = 'dddd YY/MM/DD kk:mm'
   let res = {
@@ -23,20 +23,18 @@ export const formatHours = (hours, column, row, timeSeed) => {
   return res
 }
 
-export const colorPicker = hours => {
-  const backgroundColor = color => {
-    return (color >= 20
-      ? '#332244'
-      : color >= 16
-        ? '#5566AA'
-        : color >= 12
-          ? '#8CBED6'
-          : color >= 8
-            ? '#FFDD99'
-            : color >= 4
-              ? '#5566AA'
-              : '#332244'
-    )
-  }
-  return [backgroundColor(hours[0]), backgroundColor(hours[parseInt(hours.length / 2)]), backgroundColor(hours[parseInt(hours.length - 1)])]
+export const colorPicker = (hours, colors, svgLength, gap) => {
+  console.log("_____________BEGIN_______________")
+  const dayDivide = 24
+  const divider = dayDivide / colors.length
+  const hoursRange = hours[hours.length - 1] + gap - hours[0]
+  const dayHours = Array.apply(null, Array(dayDivide)).map((_, i) => colors[parseInt(i / divider)])
+  console.log(dayHours)
+  const res = Array.apply(null, Array(svgLength)).map((_, i) => {
+    console.log(parseInt(hoursRange * i / svgLength) + hours[0])
+    return dayHours[parseInt(hoursRange * i / svgLength) + hours[0]]
+  })
+  console.log(res)
+  console.log("_____________END_______________")
+  return res
 }

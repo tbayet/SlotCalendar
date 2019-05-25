@@ -1,8 +1,27 @@
 {
   "name": "vue-slot-calendar",
-  "version": "0.1.1",
-  "author": "Thomas Bayet",
+  "version": "0.1.12",
+  "author": "Thomas Bayet <bayet.thomas@gmail.com> (https://tbayet.fr)",
   "license": "MIT",
+  "homepage": "https://tbayet.github.io/SlotCalendar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tbayet/SlotCalendar"
+  },
+  "keywords": [
+    "vue",
+    "component",
+    "slot",
+    "picker",
+    "calendar",
+    "week",
+    "select",
+    "hours",
+    "date",
+    "gap",
+    "framework",
+    "plugin"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve 'src/main.js'",
     "build": "vue-cli-service build --dest dist --target lib --name vue-slot-calendar 'src/components/VueSlotCalendar.vue'",
@@ -13,7 +32,7 @@
     "docs:serve": "vue-cli-service docs --mode serve",
     "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build"
   },
-  "main": "dist/vue-slot-calendar.common.js",
+  "main": "dist/vue-slot-calendar.esm.js",
   "module": "dist/vue-slot-calendar.esm.js",
   "unpkg": "dist/vue-slot-calendar.umd.min.js",
   "files": [

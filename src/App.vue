@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <vue-slot-calendar :minHour=8 :maxHour=22 :gap=2 v-model="test" />
-    {{ JSON.stringify(this.test) }}
+    <!-- <vue-slot-calendar :minHour=0 :maxHour=12 :gap=2 v-model="test" /> -->
+    <vue-slot-calendar :hours="[8,10,12,14,16,18,20,22]" v-model="selectedSlots" />
+    <div>
+      <h2>v-model data</h2>
+      <ul>
+        <li v-for="(e, i) in selectedSlots" :key="i">
+          {{ e }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import VueSlotCalendar from '../dist/vue-slot-calendar.esm'
+import VueSlotCalendar from './components/VueSlotCalendar'
 
 export default {
   name: 'app',
@@ -14,17 +22,26 @@ export default {
     VueSlotCalendar
   },
   data: () => ({
-    test: []
-  }),
-  mounted () {
-    // console.log(VueSlotCalendar)
-  }
+    selectedSlots: []
+  })
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 #app {
-  border: solid 1px black;
+  display: flex;
+  & > div:last-of-type {
+    overflow-y: auto;
+    width: 30vw;
+    margin: 10px;
+    border: solid 3px black;
+    text-align: left;
+    & > h2 {
+      text-align: center;
+      border-bottom: 1px solid black;
+      padding: 10px;
+    }
+  }
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

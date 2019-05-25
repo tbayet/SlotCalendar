@@ -6,7 +6,7 @@
         <th v-for="(dayOfWeek, columnIndex) in daysOfWeek"
         :key="columnIndex"
         >
-          {{ responsiveSentence(dayOfWeek) }}
+          {{ formatDays(dayOfWeek, windowWidth) }}
         </th>
       </tr>
     </thead>
@@ -14,7 +14,7 @@
       <tr v-for="(hour, rowIndex) in d_hours"
       :key="rowIndex">
         <td>
-          <div class="hourTick">{{ hour }}:00-</div>
+          <div class="hourTick">{{ formatHours(hour, windowWidth) }}</div>
           <div v-if="rowIndex === d_hours.length - 1" class="hourTick">{{ toHour(hour + (gap || (d_hours[1] - d_hours[0]))) }}:00-</div>
         </td>
         <td v-for="(dayOfWeek, columnIndex) in daysOfWeek"
@@ -25,53 +25,37 @@
           selectedCell: isSelected(columnIndex, rowIndex)
         }"
         >
-          {{ isSelected(columnIndex, rowIndex) ? isSelected(columnIndex, rowIndex).startDate : null }}
+          {{ isSelected(columnIndex, rowIndex) ? formatCell(isSelected(columnIndex, rowIndex), windowWidth) : null }}
         </td>
       </tr>
-      <background-svg :color="colorPicker(d_hours)" :paths="svgPaths"/>
+      <background-svg :color="colorPicker(d_hours, colors, svgPaths.length, gap || (d_hours[1] - d_hours[0]))" :paths="svgPaths"/>
     </tbody>
   </table>
 </template>
 
 <script>
 import Moment from 'moment'
-import backgroundSvg from './City.svg.vue'
-import { toHour, formatHours, colorPicker, durationFromNow } from '../utils'
+import backgroundSvg from './BackgroundSVG.vue'
+import { toHour, slotify, colorPicker, durationFromNow } from '../utils'
+import propTypes from './props'
+const { value, hours, minHour, maxHour, gap, svgPaths, colors, timeSeed, noDisabled, disableHours, formatCell, formatDays, formatHours } = propTypes
 
 export default {
   name: 'VueSlotCalendar',
   props: {
-    value: { validator: function (value) {
-      return !value || typeof value === 'object'
-    } },
-    // [13, 14, 16, 17, 22]
-    hours: { validator: function (hours) {
-      return !hours || (typeof hours === 'object' &&
-        hours.reduce((acc, v, i) => acc && typeof v === 'number' && (!i || (hours[i - 1] !== v), true)) &&
-        hours.sort((a, b) => a - b).equals(hours) &&
-        hours[0] >= 0 && hours[hours.length - 1] <= 24
-      )
-    } },
-    // Or :
-    minHour: { validator: function (minHour) {
-      return !minHour || (typeof minHour === 'number' && minHour >= 0 && minHour <= 24)
-    } },
-    maxHour: { validator: function (maxHour) {
-      return !maxHour || (typeof maxHour === 'number' && maxHour >= 0 && maxHour <= 24)
-    } },
-    gap: { validator: function (gap) {
-      return !gap || (typeof gap === 'number')
-    } },
-    /**
-     * {
-     *  sun: "",
-     *  city: "",
-     *  sky1: "",
-     *  sky2: "",
-     * }
-     */
-    svgPaths: Object,
-    timeSeed: Number // ms
+    value,
+    hours,
+    minHour,
+    maxHour,
+    gap,
+    svgPaths,
+    colors,
+    timeSeed,
+    noDisabled,
+    disableHours,
+    formatCell,
+    formatDays,
+    formatHours
   },
   components: {
     'background-svg': backgroundSvg
@@ -86,10 +70,11 @@ export default {
     colorPicker: colorPicker,
     toHour: toHour,
     onClick (column, row) {
+      console.log(colorPicker(d_hours, colors, svgPaths.length, gap || (d_hours[1] - d_hours[0])))
       if (!this.isDead(column, row)) {
         this.isSelected(column, row)
           ? this.selectedCells.splice(this.selectedCells.findIndex(e => e.column === column && e.row === row), 1)
-          : this.selectedCells.push(formatHours(this.d_hours, column, row, this.timeSeed))
+          : this.selectedCells.push(slotify(this.d_hours, column, row, this.timeSeed))
         this.$emit('input', this.selectedCells)
       }
     },
@@ -97,14 +82,14 @@ export default {
       return (this.selectedCells.find(e => e.column === column && e.row === row))
     },
     isDead (column, row) {
-      return durationFromNow(this.d_hours, column, row, this.timeSeed) <= 4
+      return !this.noDisabled && durationFromNow(this.d_hours, column, row, this.timeSeed) <= this.disableHours
     },
     sortDaysOfWeek () {
       const todayIndex = Moment(this.timeSeed).day() - 1
       this.daysOfWeek = this.daysOfWeek.concat(this.daysOfWeek.splice(0, todayIndex))
     },
     formatProps () {
-      const formatHours = (min, tMax, g) => {
+      const hourIfy = (min, tMax, g) => {
         const max = tMax <= min ? tMax + 24 : tMax
         let res = []
         for (let i = 0; i < max - min; i += g) {
@@ -114,10 +99,7 @@ export default {
       }
       this.d_hours = (this.hours && this.hours.length)
         ? this.hours
-        : formatHours(this.minHour, this.maxHour, this.gap || 1)
-    },
-    responsiveSentence (str) {
-      return (this.windowWidth <= 800 ? str.slice(0, 2) : str)
+        : hourIfy(this.minHour, this.maxHour, this.gap || 1)
     },
     handleResize () {
       this.windowWidth = window.innerWidth
