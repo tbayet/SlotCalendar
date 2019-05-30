@@ -25,12 +25,9 @@
   "scripts": {
     "serve": "vue-cli-service serve 'src/main.js'",
     "build": "vue-cli-service build --dest dist --target lib --name vue-slot-calendar 'src/components/VueSlotCalendar.vue'",
-    "build-demo": "vue-cli-service build --dest demo 'src/main.js'",
+    "build-demo": "parcel build -d demo public/index.html",
     "lint": "vue-cli-service lint",
-    "docs": "npm run docs:serve",
-    "docs:build": "vue-cli-service docs --mode build",
-    "docs:serve": "vue-cli-service docs --mode serve",
-    "prepublish": "vue-cli-service lint && vue-cli-service docs --mode build && vue-cli-service build"
+    "prepublish": "vue-cli-service lint && vue-cli-service build"
   },
   "main": "dist/vue-slot-calendar.esm.js",
   "module": "dist/vue-slot-calendar.esm.js",
@@ -47,7 +44,6 @@
     "moment": "^2.24.0"
   },
   "devDependencies": {
-    "node-sass": "^4.12.0",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
@@ -55,10 +51,12 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.12.0",
+    "parcel-bundler": "^1.12.3",
     "sass": "^1.20.1",
     "sass-loader": "^7.1.0",
-    "vue-cli-plugin-p11n": "^0.3.0",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-cli-plugin-p11n": "^0.3.0"
   },
   "eslintConfig": {
     "root": true,

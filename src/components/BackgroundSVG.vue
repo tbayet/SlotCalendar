@@ -1,29 +1,60 @@
 <template>
   <div class="background_container">
-    <div class="background_font_color">
+    <div class="background_font_color" :style="{
+      backgroundColor: backgroundColor
+    }">
       <div v-for="(path, i) in paths" :key="'svg-' + i"
         class="background_elem"
         :style="{
-          backgroundColor: color[i],
-          maskImage: `url(${path})`
+          ...backgroundElemStyle(path)
         }"
       >
-      {{logi()}}
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
+const defaultColor = '#000'
+
 export default {
   name: 'background-svg',
   props: {
-    color: Array,
-    paths: Array
+    paths: {
+      type: Array,
+      required: true,
+      validator: function (paths) {
+        return (
+          paths.reduce((acc, v, i) => acc && (typeof v === 'object' &&
+            'link' in v && 'style' in v && typeof v.link ==='string' &&
+            typeof v.style === 'object'
+          ), true)
+        )
+      }
+    },
   },
+  data: () => ({
+    backgroundColor: 'transparent',
+    formattedPaths : []
+  }),
   methods: {
-    logi () {
-      // console.log(this.paths)
+    backgroundElemStyle (path) {
+      return path.link !== ''
+      ? {
+        maskImage: `url(${path.link})`,
+        maskSize: 'auto 100%',
+        maskRepeat: 'repeat round',
+        maskMode: 'alpha',
+        ...path.style,
+      }
+      : path.style
+    },
+  },
+  created () {
+    if (this.paths.length && this.paths[0].link === '') {
+      this.backgroundColor = this.paths[0].style.backgroundColor || defaultColor
+      this.formattedPaths = this.paths.slice(1)
     }
   }
 }
@@ -48,7 +79,6 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-color: green;
 }
 
 .background_elem {
@@ -57,8 +87,5 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  mask-size: auto 100%;
-  mask-repeat: repeat-x;
-  mask-mode: alpha;
 }
 </style>

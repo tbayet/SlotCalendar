@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- <vue-slot-calendar :minHour=0 :maxHour=12 :gap=2 v-model="test" /> -->
-    <vue-slot-calendar :hours="[8,10,12,14,16,18,20,22]" v-model="selectedSlots" />
+    <vue-slot-calendar :minHour=0 :maxHour=14 :gap=2 v-model="selectedSlots" />
     <div>
       <h2>v-model data</h2>
       <ul>

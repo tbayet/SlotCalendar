@@ -28,7 +28,7 @@
           {{ isSelected(columnIndex, rowIndex) ? formatCell(isSelected(columnIndex, rowIndex), windowWidth) : null }}
         </td>
       </tr>
-      <background-svg :color="colorPicker(d_hours, colors, svgPaths.length, gap || (d_hours[1] - d_hours[0]))" :paths="svgPaths"/>
+      <background-svg :paths="paths"/>
     </tbody>
   </table>
 </template>
@@ -36,7 +36,7 @@
 <script>
 import Moment from 'moment'
 import backgroundSvg from './BackgroundSVG.vue'
-import { toHour, slotify, colorPicker, durationFromNow } from '../utils'
+import { toHour, slotify, durationFromNow, addColorsToPaths } from '../utils'
 import propTypes from './props'
 const { value, hours, minHour, maxHour, gap, svgPaths, colors, timeSeed, noDisabled, disableHours, formatCell, formatDays, formatHours } = propTypes
 
@@ -63,14 +63,14 @@ export default {
   data: () => ({
     selectedCells: [],
     d_hours: [],
+    paths: [],
     daysOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     windowWidth: window.innerWidth
   }),
   methods: {
-    colorPicker: colorPicker,
+    addColorsToPaths: addColorsToPaths,
     toHour: toHour,
     onClick (column, row) {
-      console.log(colorPicker(d_hours, colors, svgPaths.length, gap || (d_hours[1] - d_hours[0])))
       if (!this.isDead(column, row)) {
         this.isSelected(column, row)
           ? this.selectedCells.splice(this.selectedCells.findIndex(e => e.column === column && e.row === row), 1)
@@ -107,16 +107,23 @@ export default {
   },
   created () {
     window.addEventListener('resize', this.handleResize)
-    if (!(this.hours || (this.minHour && this.maxHour && this.gap)) ||
+    if (!(this.hours || (this.minHour !== undefined && this.maxHour && this.gap)) ||
     (this.hours && (this.minHour || this.maxHour || this.gap)) ||
     this.minHour >= this.maxHour ||
     this.gap > this.maxHour - this.minHour) {
-      throw new TypeError('invalid props', 'Calendar.vue')
+      throw new TypeError('invalid props', 'VueSlotCalendar.vue')
     }
-  },
-  mounted () {
     this.sortDaysOfWeek()
     this.formatProps()
+    this.paths = this.addColorsToPaths(
+      this.d_hours,
+      this.colors,
+      this.svgPaths.map(p => ({
+        link: typeof p === 'string' ? p : p[0],
+        style: typeof p === 'string' || p.length < 2 ? { zIndex: 0 } : { zIndex: 0, ...p[1] }
+      })),
+      this.gap || (this.d_hours[1] - this.d_hours[0])
+    )
   },
   destroyed () {
     window.removeEventListener('resize', this.handleResize)

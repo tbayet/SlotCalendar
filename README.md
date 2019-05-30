@@ -40,7 +40,8 @@ export  default {
 | minHour | Number | undefined | first hour of the range |
 | maxHour | Number | undefined | last hour of the range |
 | gap | Number | undefined | gap of the range |
-| svgPaths | Object {String} | {} | 'sun', 'city', 'sky1', 'sky2' keys for custom svg at background |
+| svgPaths | Array [String], Array[Array[String, Object]] | [['.../link.svg', {...config}], ...] | custom SVGs at background |
+| colors | Array [String] | ['#1E1823', '#242A37' '#3F...'] | colors for SVGs, ordered, to scale with the day hours (0 to 24) |
 | timeSeed | Number | undefined (now) | unix() milliseconds to set beggining date of the calendar |
 | noDisabled | Boolean | false | prevent locking past hours |
 | disableHours | Number | 2 | the next hours that are locked |

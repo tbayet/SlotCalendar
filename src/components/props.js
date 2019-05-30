@@ -33,36 +33,46 @@ const propTypes = {
   },
   svgPaths: {
     type: Array,
+    validator: function (svgPaths) {
+      return (
+        svgPaths.reduce((acc, v, i) => acc && (typeof v === 'string' ||
+          (typeof v === 'object' &&
+          v.length && typeof v[0] === 'string' &&
+          (v.length === 1 || typeof v[1] === 'object'))
+        ), true)
+      )
+    },
     default: () => [
       '',
       require('../assets/backgroundSVG/sky2.svg'),
+      [require('../assets/backgroundSVG/sun.svg'), { zIndex: 8, maskRepeat: 'no-repeat', maskSize: 'auto 90%' }],
       require('../assets/backgroundSVG/sky1.svg'),
       require('../assets/backgroundSVG/horizon.svg'),
       require('../assets/backgroundSVG/city2.svg'),
-      require('../assets/backgroundSVG/city1.svg'),
-      require('../assets/backgroundSVG/sun.svg')
+      require('../assets/backgroundSVG/city1.svg')
     ]
   },
   colors: {
     type: Array,
     default: () => [
-      '1E1823', // 0 Bastille
+      '#1E1823', // 0 Bastille
       '#242A37', // 2 dark Slate Gray
       '#3F6E77', // 4 Faded Jade
       '#6EB3B6', // 6 Neptune
-      '#EB8F5E', // 7 Dark Salmon
-      '#B1766F', // 9 Rosy Brown
-      '#E5B395', // 11 Burly Wood
+      '#EB8F5E', // 8 Dark Salmon
+      '#E5B395', // 10 Burly Wood
       '#FBEFBF', // 12 Light Goldenrod Yellow
-      '#E5B395', // 14 Burly Wood
-      '#B1766F', // 16 Rosy Brown
-      '#EB8F5E', // 18 Dark Salmon
-      '#6EB3B6', // 20 Neptune
-      '#3F6E77', // 22 Faded Jade
-      '#242A37' // 23 Dark Slate Gray
+      '#B1766F', // 14 Rosy Brown
+      '#6EB3B6', // 16 Neptune
+      '#3F6E77', // 18 Faded Jade
+      '#242A37', // 20 Dark Slate Gray
+      '#1E1823' // 22 Bastille
     ]
   },
-  timeSeed: Number,
+  timeSeed: {
+    type: Number,
+    default: undefined
+  },
   noDisabled: {
     type: Boolean,
     default: false

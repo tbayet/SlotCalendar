@@ -23,18 +23,34 @@ export const slotify = (hours, column, row, timeSeed) => {
   return res
 }
 
-export const colorPicker = (hours, colors, svgLength, gap) => {
-  console.log("_____________BEGIN_______________")
+export const addColorsToPaths = (hours, colors, paths, gap) => {
   const dayDivide = 24
   const divider = dayDivide / colors.length
   const hoursRange = hours[hours.length - 1] + gap - hours[0]
   const dayHours = Array.apply(null, Array(dayDivide)).map((_, i) => colors[parseInt(i / divider)])
-  console.log(dayHours)
-  const res = Array.apply(null, Array(svgLength)).map((_, i) => {
-    console.log(parseInt(hoursRange * i / svgLength) + hours[0])
-    return dayHours[parseInt(hoursRange * i / svgLength) + hours[0]]
-  })
-  console.log(res)
-  console.log("_____________END_______________")
-  return res
+  return (paths.map(
+    (p, i) => ({
+      link: p.link,
+      style: {
+        ...p.style,
+        backgroundColor: dayHours[parseInt(hoursRange * i / paths.length) + hours[0]]
+      }
+    })
+  ))
 }
+
+// export const colorPicker = (hours, colors, svgLength, gap) => {
+//   console.log("_____________BEGIN_______________")
+//   const dayDivide = 24
+//   const divider = dayDivide / colors.length
+//   const hoursRange = hours[hours.length - 1] + gap - hours[0]
+//   const dayHours = Array.apply(null, Array(dayDivide)).map((_, i) => colors[parseInt(i / divider)])
+//   console.log(dayHours)
+//   const res = Array.apply(null, Array(svgLength)).map((_, i) => {
+//     console.log(parseInt(hoursRange * i / svgLength) + hours[0])
+//     return dayHours[parseInt(hoursRange * i / svgLength) + hours[0]]
+//   })
+//   console.log(res)
+//   console.log("_____________END_______________")
+//   return res
+// }
