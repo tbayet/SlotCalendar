@@ -11,17 +11,17 @@ var e,t=arguments[3];!function(t,n){"object"==typeof exports&&"undefined"!=typeo
 },{}],"5O3A":[function(require,module,exports) {
 "use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.addColorsToPaths=exports.slotify=exports.durationFromNow=exports.toHour=void 0;var t=r(require("moment"));function r(t){return t&&t.__esModule?t:{default:t}}function e(t){for(var r=1;r<arguments.length;r++){var e=null!=arguments[r]?arguments[r]:{},n=Object.keys(e);"function"==typeof Object.getOwnPropertySymbols&&(n=n.concat(Object.getOwnPropertySymbols(e).filter(function(t){return Object.getOwnPropertyDescriptor(e,t).enumerable}))),n.forEach(function(r){o(t,r,e[r])})}return t}function o(t,r,e){return r in t?Object.defineProperty(t,r,{value:e,enumerable:!0,configurable:!0,writable:!0}):t[r]=e,t}var n=function(t){return t%24};exports.toHour=n;var a=function(r,e,o,n){var a=(0,t.default)(n).startOf("date").add(e,"days").add(r[o],"hours").unix(),u=(0,t.default)().unix();return t.default.duration(1e3*(a-u)).asHours()};exports.durationFromNow=a;var u=function(r,e,o,n){var a=(0,t.default)(n).startOf("date").add(e,"days"),u={column:e,row:o,startTime:(0,t.default)(a).add(r[o],"hours").unix(),endTime:(0,t.default)(a).add(r[(o+1)%r.length],"hours").unix(),startDate:(0,t.default)(a).add(r[o],"hours").format("dddd YY/MM/DD kk:mm"),endDate:(0,t.default)(a).add(r[(o+1)%r.length],"hours").format("dddd YY/MM/DD kk:mm")};return u.duration=t.default.duration(1e3*(u.endTime-u.startTime)).asHours(),u};exports.slotify=u;var d=function(t,r,o,n){var a=24/r.length,u=t[t.length-1]+n-t[0],d=Array.apply(null,Array(24)).map(function(t,e){return r[parseInt(e/a)]});return o.map(function(r,n){return{link:r.link,style:e({},r.style,{backgroundColor:d[parseInt(u*n/o.length)+t[0]]})}})};exports.addColorsToPaths=d;
 },{"moment":"a2/B"}],"kaKX":[function(require,module,exports) {
-module.exports="/SlotCalendar/sky2.350e57c0.svg";
+module.exports="/sky2.350e57c0.svg";
 },{}],"A5m8":[function(require,module,exports) {
-module.exports="/SlotCalendar/sun.b5fbb8b6.svg";
+module.exports="/sun.b5fbb8b6.svg";
 },{}],"U6YW":[function(require,module,exports) {
-module.exports="/SlotCalendar/sky1.3ebaf1ce.svg";
+module.exports="/sky1.3ebaf1ce.svg";
 },{}],"zwEl":[function(require,module,exports) {
-module.exports="/SlotCalendar/horizon.2c9d4975.svg";
+module.exports="/horizon.2c9d4975.svg";
 },{}],"ZcQg":[function(require,module,exports) {
-module.exports="/SlotCalendar/city2.a2554d92.svg";
+module.exports="/city2.a2554d92.svg";
 },{}],"eO0D":[function(require,module,exports) {
-module.exports="/SlotCalendar/city1.dfe7ba69.svg";
+module.exports="/city1.dfe7ba69.svg";
 },{}],"UDfp":[function(require,module,exports) {
 "use strict";function t(e){return(t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t})(e)}Object.defineProperty(exports,"__esModule",{value:!0}),exports.default=void 0;var e=function(t,e){return t.every(function(t,r){return t===e[r]})},r={value:{validator:function(e){return!e||"object"===t(e)},default:[]},hours:{validator:function(r){return!r||"object"===t(r)&&r.reduce(function(t,e,n){return t&&"number"==typeof e&&(!n||r[n-1],!0)})&&e(r.sort(function(t,e){return t-e}),r)&&r[0]>=0&&r[r.length-1]<=24}},minHour:{validator:function(t){return!t||"number"==typeof t&&t>=0&&t<=24}},maxHour:{validator:function(t){return!t||"number"==typeof t&&t>=0&&t<=24}},gap:{validator:function(t){return!t||"number"==typeof t}},svgPaths:{type:Array,validator:function(e){return e.reduce(function(e,r,n){return e&&("string"==typeof r||"object"===t(r)&&r.length&&"string"==typeof r[0]&&(1===r.length||"object"===t(r[1])))},!0)},default:function(){return["",require("../assets/backgroundSVG/sky2.svg"),[require("../assets/backgroundSVG/sun.svg"),{zIndex:8,maskRepeat:"no-repeat",maskSize:"auto 90%"}],require("../assets/backgroundSVG/sky1.svg"),require("../assets/backgroundSVG/horizon.svg"),require("../assets/backgroundSVG/city2.svg"),require("../assets/backgroundSVG/city1.svg")]}},colors:{type:Array,default:function(){return["#1E1823","#242A37","#3F6E77","#6EB3B6","#EB8F5E","#E5B395","#FBEFBF","#B1766F","#6EB3B6","#3F6E77","#242A37","#1E1823"]}},timeSeed:{type:Number,default:void 0},noDisabled:{type:Boolean,default:!1},disableHours:{type:Number,default:2},formatCell:{type:Function,default:function(t,e){return t.startDate}},formatDays:{type:Function,default:function(t,e){return e<=800?t.slice(0,2):t}},formatHours:{type:Function,default:function(t,e){return"".concat(t,":00-")}}},n=r;exports.default=n;
 },{"../assets/backgroundSVG/sky2.svg":"kaKX","../assets/backgroundSVG/sun.svg":"A5m8","../assets/backgroundSVG/sky1.svg":"U6YW","../assets/backgroundSVG/horizon.svg":"zwEl","../assets/backgroundSVG/city2.svg":"ZcQg","../assets/backgroundSVG/city1.svg":"eO0D"}],"iP4C":[function(require,module,exports) {
@@ -33,4 +33,4 @@ module.exports="/SlotCalendar/city1.dfe7ba69.svg";
 },{"./components/VueSlotCalendar":"iP4C"}],"3WSm":[function(require,module,exports) {
 "use strict";var e=r(require("vue")),u=r(require("./App.vue"));function r(e){return e&&e.__esModule?e:{default:e}}e.default.config.productionTip=!1,new e.default({render:function(e){return e(u.default)}}).$mount("#app");
 },{"vue":"QPfz","./App.vue":"/3yu"}]},{},["3WSm"], null)
-//# sourceMappingURL=/SlotCalendar/main.2a5c9bbc.js.map
+//# sourceMappingURL=/main.2a5c9bbc.js.map
